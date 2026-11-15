@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Front Row for Mac</title>
+<meta name="description" content="Front Row turns your Mac into a TV: your streaming services and your own films and shows, in one calm, glassy home screen. Free for macOS.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="Front Row for Mac">
+<meta property="og:description" content="Your Mac, as a TV. Free for macOS 14 and later.">
+<meta property="og:image" content="icon.png">
+<link rel="icon" href="favicon.png">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#000; --ink:#f5f5f7; --dim:#a1a1a6; --faint:#6e6e73;
+  --glass:rgba(255,255,255,.07); --glass-hi:rgba(255,255,255,.16); --rim:rgba(255,255,255,.16);
+  --blue:#2997ff; --orange:#ff6a3d; --violet:#a259ff;
+  --gutter:clamp(16px,5vw,64px); --max:1120px;
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color-scheme:dark;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.47;overflow-x:hidden;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- Liquid glass ---------- */
+.glass{position:relative;isolation:isolate;
+  background:linear-gradient(140deg,rgba(255,255,255,.13),rgba(255,255,255,.035) 45%,rgba(255,255,255,.07));
+  -webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);
+  border:1px solid var(--rim);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(255,255,255,.06),
+             inset 0 0 22px rgba(255,255,255,.04),0 24px 70px rgba(0,0,0,.55);}
+/* the sheen that follows the pointer */
+.glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:radial-gradient(420px circle at var(--mx,30%) var(--my,0%),rgba(255,255,255,.16),transparent 55%);
+  opacity:.9;transition:opacity .4s}
+.pill{border-radius:999px}
+
+/* ---------- Nav ---------- */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;height:calc(52px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);display:flex;align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%)}
+nav .wrap{display:flex;align-items:center;gap:24px;width:100%}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px}
+nav .brand img{width:26px;height:26px}
+nav .links{display:flex;gap:26px;margin-left:auto;font-size:13px;color:var(--dim)}
+nav .links a:hover{color:var(--ink)}
+nav .get{font-size:13px;font-weight:600;padding:6px 14px;background:var(--blue);color:#fff;border-radius:999px}
+@media (max-width:720px){nav .links{display:none}nav .get{margin-left:auto}}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;min-height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;padding:120px 0 80px}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;will-change:transform;pointer-events:none}
+.orb.o1{width:52vmax;height:52vmax;left:-14vmax;top:-10vmax;background:radial-gradient(circle,#ff5a36,transparent 65%)}
+.orb.o2{width:46vmax;height:46vmax;right:-16vmax;top:6vmax;background:radial-gradient(circle,#2f6bff,transparent 65%)}
+.orb.o3{width:40vmax;height:40vmax;left:20vmax;bottom:-22vmax;background:radial-gradient(circle,#9b4dff,transparent 65%);opacity:.4}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:22px}
+.hero .icon{width:clamp(110px,16vw,168px);filter:drop-shadow(0 30px 60px rgba(41,151,255,.35));will-change:transform}
+.eyebrow{font-size:clamp(17px,2vw,21px);font-weight:600;color:var(--orange)}
+h1{font-size:clamp(56px,11vw,128px);line-height:1.02;font-weight:700;letter-spacing:-.045em;
+  background:linear-gradient(180deg,#fff 30%,#b9b9c2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:clamp(19px,2.4vw,28px);color:var(--dim);max-width:30ch;font-weight:500;letter-spacing:-.02em}
+.cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:17px;padding:14px 26px;border-radius:999px;transition:transform .25s var(--ease),background .25s}
+.btn:hover{transform:scale(1.04)}
+.btn.primary{background:var(--blue);color:#fff;box-shadow:0 10px 40px rgba(41,151,255,.35)}
+.btn.ghost{color:var(--ink)}
+.meta{font-size:13px;color:var(--faint)}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);width:26px;height:42px;border:1.5px solid rgba(255,255,255,.3);border-radius:14px;z-index:2}
+.scroll-cue::after{content:"";position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:#fff;animation:cue 1.8s infinite}
+@keyframes cue{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(14px)}}
+
+/* ---------- Showcase: the Home screen, zooming in as you scroll ---------- */
+.showcase{position:relative;height:220vh}
+.stage{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
+.stage h2{position:absolute;top:13vh;width:100%;text-align:center;z-index:3;padding:0 var(--gutter)}
+.screen{position:relative;width:min(1080px,92vw);aspect-ratio:16/10;border-radius:22px;overflow:hidden;
+  transform:scale(var(--s,.72)) translateY(var(--ty,8vh));transform-origin:50% 60%;will-change:transform;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 60px 140px rgba(0,0,0,.8)}
+.screen .shelf{position:absolute;inset:0;background:
+  radial-gradient(120% 90% at 75% 10%,#ffb36b 0%,#e8693a 24%,#7a2b52 52%,#1d1238 78%,#07060f 100%)}
+.screen .shelf::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,transparent 40%,rgba(0,0,0,.55) 70%,rgba(0,0,0,.85));}
+.screen .hills{position:absolute;left:-5%;right:-5%;bottom:22%;height:38%;
+  background:radial-gradient(60% 100% at 30% 100%,#2a1736 60%,transparent 61%),radial-gradient(70% 90% at 80% 100%,#1b0f29 60%,transparent 61%);
+  will-change:transform}
+.traffic{position:absolute;top:14px;left:16px;display:flex;gap:8px;z-index:3}
+.traffic i{width:12px;height:12px;border-radius:50%;background:#ff5f57}
+.traffic i:nth-child(2){background:#febc2e}.traffic i:nth-child(3){background:#28c840}
+.screen .feature{position:absolute;left:6%;top:16%;z-index:2;text-align:left}
+.screen .feature small{font-size:clamp(9px,1.2vw,13px);font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.75)}
+.screen .feature b{display:block;font-size:clamp(22px,4.6vw,54px);letter-spacing:-.03em;line-height:1.05;margin-top:6px}
+.screen .feature .play{margin-top:14px;display:inline-flex;font-size:clamp(9px,1.2vw,14px);font-weight:600;color:#000;background:#fff;padding:.55em 1.3em;border-radius:999px}
+.clock{position:absolute;top:4.5%;right:4%;z-index:3;font-size:clamp(9px,1.3vw,14px);font-weight:600;padding:.45em .5em .45em 1em;display:flex;gap:.6em;align-items:center}
+.clock i{display:grid;place-items:center;width:2em;height:2em;border-radius:50%;background:linear-gradient(135deg,#ff7ab6,#ff5a5a);font-style:normal;font-size:.8em;font-weight:800}
+.dock{position:absolute;left:4%;right:4%;bottom:7%;z-index:2;border-radius:clamp(14px,2.4vw,30px);padding:clamp(8px,1.4vw,16px);display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(6px,1.2vw,14px)}
+.tile{aspect-ratio:16/10;border-radius:clamp(7px,1.2vw,14px);display:grid;place-items:center;position:relative;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px rgba(0,0,0,.35);transition:transform .35s var(--ease)}
+.tile svg{width:34%;height:auto;opacity:.95}
+.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.28),transparent 45%)}
+.tile.focus{transform:scale(1.12);z-index:2;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 18px 40px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.7)}
+.t1{background:linear-gradient(145deg,#ff7a3d,#e02d4b)}
+.t2{background:linear-gradient(145deg,#3a3a40,#16161a)}
+.t3{background:linear-gradient(145deg,#2fd2ff,#1b5cff)}
+.t4{background:linear-gradient(145deg,#a35bff,#5420c9)}
+.t5{background:linear-gradient(145deg,#29d39a,#0b7a63)}
+.t6{background:linear-gradient(145deg,#ffd35a,#f08a1c)}
+.dock-label{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(7% + 100% * 0 + clamp(64px,11vw,140px));z-index:3;font-size:clamp(9px,1.2vw,13px);font-weight:600;opacity:.9}
+
+/* ---------- Sections ---------- */
+section{position:relative}
+.section{padding:clamp(90px,14vw,170px) 0}
+h2{font-size:clamp(40px,7vw,80px);line-height:1.05;font-weight:700;letter-spacing:-.04em}
+h2 .grad{background:linear-gradient(90deg,#ff8a5b,#ff4f7b 40%,#a970ff 75%,#3d8bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:clamp(19px,2.2vw,24px);color:var(--dim);max-width:38ch;margin-top:20px;font-weight:500;letter-spacing:-.015em}
+.center{text-align:center}.center .sub{margin-left:auto;margin-right:auto}
+
+.js .reveal:not(.in){transform:translateY(32px);opacity:.35}
+.reveal{transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* bento grid */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:64px}
+.card{border-radius:30px;padding:clamp(24px,3vw,38px);overflow:hidden;min-height:300px;display:flex;flex-direction:column}
+.card h3{font-size:clamp(24px,2.6vw,32px);line-height:1.12;letter-spacing:-.03em;font-weight:700}
+.card p{color:var(--dim);margin-top:10px;font-size:17px;max-width:34ch}
+.card .k{font-size:14px;font-weight:600;color:var(--orange);margin-bottom:10px}
+.c-wide{grid-column:span 4}.c-mid{grid-column:span 3}.c-narrow{grid-column:span 2}
+@media (max-width:900px){.c-wide,.c-mid,.c-narrow{grid-column:span 6}.card{min-height:0}}
+.card .art{margin-top:auto;padding-top:28px}
+
+/* real screenshots */
+.screen .shot{display:block;width:100%;height:100%;object-fit:cover}
+.cardshot{display:block;width:100%;max-width:100%;border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1)}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:56px}
+.gallery figure{margin:0}
+.gallery .g-wide{grid-column:span 2}
+.gallery img{display:block;width:100%;max-width:100%;border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1)}
+.gallery figcaption{margin-top:12px;font-size:15px;color:var(--dim);text-align:center}
+@media (max-width:760px){.gallery{grid-template-columns:1fr}.gallery .g-wide{grid-column:auto}}
+
+/* posters with ribbons */
+.posters{display:flex;gap:14px}
+.poster{flex:1;aspect-ratio:2/3;border-radius:12px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.12)}
+.poster:nth-child(1){background:linear-gradient(170deg,#1d3557,#0b132b 60%,#c1121f)}
+.poster:nth-child(2){background:linear-gradient(170deg,#e9c46a,#7c4a1f 55%,#1a0f06)}
+.poster:nth-child(3){background:linear-gradient(170deg,#5f0f40,#9a031e 45%,#0f0f12)}
+.poster:nth-child(4){background:linear-gradient(170deg,#c7d2d4,#6b7b7d 50%,#202628)}
+.poster b{position:absolute;left:10px;bottom:10px;right:10px;font-size:12px;line-height:1.15;letter-spacing:-.01em}
+.ribbon{position:absolute;top:26px;right:-38px;width:150px;transform:rotate(45deg);text-align:center;font-size:7.5px;font-weight:800;letter-spacing:.08em;padding:4px 0;box-shadow:0 3px 8px rgba(0,0,0,.45)}
+.r-new{background:linear-gradient(#f2303a,#b80d1f);color:#fff}
+.r-best{background:linear-gradient(#ffdb73,#c79426);color:#3a2800}
+.r-cult{background:linear-gradient(#33c7c7,#0d808c);color:#fff}
+.r-classic{background:linear-gradient(#faf0dc,#d6c4a3);color:#47331e}
+@media (max-width:520px){.poster:nth-child(4){display:none}}
+
+/* player mock */
+.player{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:
+  radial-gradient(120% 120% at 20% 20%,#0f4c75 0%,#1b262c 45%,#05070a 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.player .sun{position:absolute;width:38%;aspect-ratio:1;border-radius:50%;right:12%;top:12%;background:radial-gradient(circle,#ffd29d,#ff7b54 45%,transparent 70%);filter:blur(4px)}
+.player .bar{position:absolute;left:5%;right:5%;bottom:7%;display:flex;align-items:center;gap:12px;padding:10px 14px}
+.player .bar .pp{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18)}
+.player .track{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.25);position:relative}
+.player .track::before{content:"";position:absolute;inset:0 62% 0 0;border-radius:3px;background:#fff}
+.player .time{font-size:11px;color:#ddd;font-variant-numeric:tabular-nums}
+.player .big{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;display:grid;place-items:center}
+
+/* control center mock */
+.cc{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:330px}
+.cc .t{border-radius:18px;padding:12px;min-height:84px;display:flex;flex-direction:column;justify-content:space-between}
+.cc .t i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);font-style:normal;font-size:13px}
+.cc .t.on i{background:#fff;color:#000}
+.cc .t b{font-size:12px;letter-spacing:-.01em}.cc .t span{font-size:10px;color:var(--dim)}
+.cc .full{grid-column:span 2}
+.cc .row{grid-column:span 2;display:flex;justify-content:space-between;margin-top:4px}
+.cc .row i{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:16px}
+
+/* parallax band */
+.band{position:relative;height:90vh;overflow:hidden;display:grid;place-items:center;text-align:center}
+.band .layer{position:absolute;inset:-20% -5%;will-change:transform}
+.band .l1{background:radial-gradient(50% 40% at 30% 40%,rgba(255,106,61,.5),transparent 70%),radial-gradient(45% 40% at 75% 60%,rgba(41,151,255,.45),transparent 70%)}
+.band .l2{background:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.035) 46px 47px)}
+.band .chips{position:absolute;inset:0;pointer-events:none}
+.band .chip{position:absolute;padding:10px 18px;font-size:15px;font-weight:600;will-change:transform;white-space:nowrap}
+.band h2{position:relative;z-index:2;max-width:16ch;padding:0 var(--gutter)}
+
+/* privacy list */
+.privacy{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px}
+.privacy .glass{border-radius:26px;padding:28px}
+.privacy h4{font-size:20px;letter-spacing:-.02em;margin:14px 0 6px}
+.privacy p{color:var(--dim);font-size:16px}
+.privacy .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:rgba(255,255,255,.08)}
+@media (max-width:900px){.privacy{grid-template-columns:1fr}}
+
+/* download */
+.download{border-radius:40px;padding:clamp(32px,6vw,80px);display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,64px);align-items:center;margin-top:24px}
+.download img{width:clamp(120px,16vw,200px)}
+.download h2{font-size:clamp(38px,5.6vw,64px)}
+.download .specs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 28px}
+.download .specs span{font-size:13px;color:var(--dim);padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12)}
+@media (max-width:760px){.download{grid-template-columns:1fr;text-align:center}.download img{margin:0 auto}.download .specs{justify-content:center}.download .cta{justify-content:center}}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+.steps .glass{border-radius:22px;padding:24px}
+.steps b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--blue);font-size:14px;margin-bottom:12px}
+.steps p{color:var(--dim);font-size:15px}
+.steps p strong{color:var(--ink);font-weight:600}
+@media (max-width:900px){.steps{grid-template-columns:1fr}}
+.note{margin-top:20px;font-size:13px;color:var(--dim);max-width:52ch}.note strong{color:var(--ink);font-weight:600}
+.hash{margin-top:8px;font-size:12px;color:var(--faint);word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+footer{border-top:1px solid rgba(255,255,255,.1);padding:34px 0 50px;color:var(--faint);font-size:12px;line-height:1.6}
+footer p+p{margin-top:8px}
+footer a{text-decoration:underline;text-underline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .scroll-cue::after{animation:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="">Front Row</a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#your-space">Your Space</a>
+      <a href="#shows">Shows</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#download">Download</a>
+    </div>
+    <a class="get" href="#download">Download</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="top">
+  <div class="orb o1" data-speed="-0.25"></div>
+  <div class="orb o2" data-speed="-0.4"></div>
+  <div class="orb o3" data-speed="-0.15"></div>
+  <div class="grain"></div>
+  <div class="hero-inner">
+    <img class="icon" src="icon.png" alt="Front Row app icon" data-speed="0.18">
+    <p class="eyebrow">For Mac</p>
+    <h1>Front Row.</h1>
+    <p class="lede">Your Mac, as a TV. Every service you watch and every film you own, in one calm home screen.</p>
+    <div class="cta">
+      <a class="btn primary" href="#download">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
+        Download for free
+      </a>
+      <a class="btn ghost glass pill" href="#features">See what's inside</a>
+    </div>
+    <p class="meta">macOS 14 Sonoma or later · Apple silicon and Intel</p>
+  </div>
+  <div class="scroll-cue" aria-hidden="true"></div>
+</header>
+
+<!-- Home screen showcase -->
+<section class="showcase" id="features" aria-label="The home screen">
+  <div class="stage">
+    <h2 class="reveal">Lean back. <span class="grad">It's TV now.</span></h2>
+    <div class="screen" id="screen">
+      <img class="shot" src="images/app-home.jpg" alt="Front Row's home screen: the focused app's featured title fills the screen above a glass dock of apps">
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+  <div class="wrap">
+    <div class="center reveal">
+      <h2>Everything you watch.<br><span class="grad">One home.</span></h2>
+      <p class="sub">The streaming services you already pay for sit side by side with your own library, under one remote-friendly home screen.</p>
+    </div>
+
+    <div class="bento">
+      <article class="card glass c-wide reveal" id="your-space">
+        <p class="k">Your Space</p>
+        <h3>Your films and shows, beautifully at home.</h3>
+        <p>Add a folder and Front Row finds posters, key art, cast and episode guides. MKV, AVI and more play right inside, with subtitles you can search for.</p>
+        <div class="art"><img class="cardshot" src="images/app-your-space.jpg" alt="Your Space: a film you're partway through, with your movies and their ribbons below" loading="lazy"></div>
+      </article>
+
+      <article class="card glass c-narrow reveal">
+        <p class="k">Ribbons</p>
+        <h3>Every poster tells you why.</h3>
+        <p>New releases, Oscar winners, blockbusters, modern classics and cult favourites, marked with a little ribbon.</p>
+      </article>
+
+      <article class="card glass c-mid reveal">
+        <p class="k">The player</p>
+        <h3>A player made of glass.</h3>
+        <p>Big, quiet controls that get out of the way. Subtitle and audio menus that make sense, Picture in Picture and full screen in a click.</p>
+        <div class="art">
+          <img class="cardshot" src="images/app-player.jpg" alt="The player, paused, with one big glass play button" loading="lazy">
+        </div>
+      </article>
+
+      <article class="card glass c-mid reveal">
+        <p class="k">Control Center</p>
+        <h3>Yours to arrange.</h3>
+        <p>Sleep timer, volume boost, Picture in Picture, screen saver. Add what you use, remove what you don't.</p>
+        <div class="art">
+          <div class="cc">
+            <div class="t glass"><i>☾</i><div><b>Sleep Timer</b><br><span>30 min</span></div></div>
+            <div class="t glass on"><i>🔊</i><div><b>Volume Boost</b><br><span>200%</span></div></div>
+            <div class="t glass"><i>⧉</i><div><b>Picture in Picture</b><br><span>Pop out video</span></div></div>
+            <div class="t glass"><i>✦</i><div><b>Screen Saver</b><br><span>After 5 min</span></div></div>
+            <div class="row"><i class="glass">↻</i><i class="glass">⌘</i><i class="glass">▦</i><i class="glass">⚙</i></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card glass c-narrow reveal">
+        <p class="k">Volume Boost</p>
+        <h3>Quiet shows, fixed.</h3>
+        <p>Up to 300% louder, on top of your Mac's volume, with a soft limiter so it never crackles.</p>
+      </article>
+
+      <article class="card glass c-narrow reveal">
+        <p class="k">Screen saver</p>
+        <h3>Art when you pause.</h3>
+        <p>Key art from what you're watching, tvOS-style scenery or Aerial videos. You choose.</p>
+      </article>
+
+      <article class="card glass c-narrow reveal">
+        <p class="k">Profiles</p>
+        <h3>Everyone gets their own.</h3>
+        <p>Separate sign-ins, history and layout for each person in the house.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Shows -->
+<section class="section" id="shows" style="padding-top:0">
+  <div class="wrap">
+    <div class="center reveal">
+      <h2>Shows, <span class="grad">done properly.</span></h2>
+      <p class="sub">Key art, episodes by season with synopses and stills, the cast, and how far through you are. Up Next always knows where you left off.</p>
+    </div>
+    <div class="gallery">
+      <figure class="g-wide reveal"><img src="images/app-show.jpg" alt="A show's page with its key art, the episode you're on and Resume" loading="lazy"></figure>
+      <figure class="reveal"><img src="images/app-episodes.jpg" alt="Episodes by season, the cast and your progress" loading="lazy"><figcaption>Every episode, every season</figcaption></figure>
+      <figure class="reveal"><img src="images/app-episodes-panel.jpg" alt="The Episodes panel sliding in over the player" loading="lazy"><figcaption>Episodes without leaving the player</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- Parallax band -->
+<section class="band" aria-label="Search">
+  <div class="layer l1" data-speed="-0.2"></div>
+  <div class="layer l2" data-speed="-0.08"></div>
+  <div class="chips" aria-hidden="true">
+    <span class="chip glass pill" style="left:8%;top:22%" data-speed="-0.35">Where can I watch it?</span>
+    <span class="chip glass pill" style="right:9%;top:30%" data-speed="-0.15">Similar films</span>
+    <span class="chip glass pill" style="left:14%;bottom:24%" data-speed="-0.1">Cast &amp; crew</span>
+    <span class="chip glass pill" style="right:14%;bottom:18%" data-speed="-0.3">Ratings</span>
+  </div>
+  <h2 class="reveal">Search any film. <span class="grad">Find where it's playing.</span></h2>
+</section>
+
+<!-- Privacy -->
+<section class="section" id="privacy">
+  <div class="wrap">
+    <div class="center reveal">
+      <h2>Private by design.</h2>
+      <p class="sub">Front Row runs in Apple's App Sandbox. It sees only what you hand it, and nothing about you leaves your Mac.</p>
+    </div>
+    <div class="privacy">
+      <div class="glass reveal"><div class="ic">🔒</div><h4>Only the folders you pick</h4><p>Your library is read-only, and only the folders you add. Nothing else on your Mac is reachable.</p></div>
+      <div class="glass reveal"><div class="ic">👤</div><h4>Sign-ins stay put</h4><p>Each profile keeps its own logins, inside the app. Front Row has no account and no servers.</p></div>
+      <div class="glass reveal"><div class="ic">📡</div><h4>No tracking</h4><p>No analytics, no ads, no data collected. It only looks up film details and artwork.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Download -->
+<section class="section" id="download" style="padding-top:20px">
+  <div class="wrap">
+    <div class="download glass reveal">
+      <img src="icon.png" alt="Front Row app icon">
+      <div>
+        <h2>Get Front Row.</h2>
+        <p class="sub" style="margin-top:12px">Free. One download for every Mac running macOS 14 or later.</p>
+        <div class="specs">
+          <span>Version 0.1</span><span>Apple silicon &amp; Intel</span><span>macOS 14+</span><span>Liquid Glass on macOS 26</span><span id="size">43 MB disk image</span>
+        </div>
+        <div class="cta" style="justify-content:flex-start">
+          <a class="btn primary" id="dl" href="https://drive.google.com/uc?export=download&amp;id=1Q7kHcFBubhb1vEXdlT9k7ct6YWerAlr-" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
+            Download for Mac
+          </a>
+        </div>
+        <p class="note">Hosted on Google Drive. It will say it can't scan the file for viruses (it does that for every app); click <strong>Download anyway</strong>. To be sure you have the real file, its fingerprint should match:</p>
+        <p class="hash" id="hash">SHA-256 272eabbffebcfc6fd80ecff313176d1f5f83e6282393bdabc3818906349d3fc6</p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="glass reveal"><b>1</b><p><strong>Drag Front Row to Applications</strong> in the window that opens.</p></div>
+      <div class="glass reveal"><b>2</b><p><strong>Open it once.</strong> macOS says it can't check the developer, because Front Row isn't from the App Store. Click Done.</p></div>
+      <div class="glass reveal"><b>3</b><p>In <strong>System Settings › Privacy &amp; Security</strong>, click <strong>Open Anyway</strong>. You only do this once.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Front Row is an independent, free project. It is not affiliated with, endorsed by or sponsored by Apple Inc. Apple, Mac, macOS, Apple TV and tvOS are trademarks of Apple Inc. Streaming services named or shown in the app are trademarks of their owners, and you need your own subscriptions to watch them.</p>
+    <p>Video playback for MKV, AVI and other formats uses <a href="https://www.videolan.org/vlc/libvlc.html">VLCKit</a> by VideoLAN, under the GNU LGPL 2.1. Its source code is available from <a href="https://code.videolan.org/videolan/VLCKit">VideoLAN</a>.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // On GitHub Pages (name.github.io/repo), download from that repo's latest release.
+  const gh = location.hostname.match(/^([a-z0-9-]+)\.github\.io$/i);
+  if (gh) {
+    const repo = location.pathname.split('/').filter(Boolean)[0];
+    const dl = document.getElementById('dl');
+    if (repo && dl) {
+      dl.href = `https://github.com/${gh[1]}/${repo}/releases/latest/download/Front-Row.dmg`;
+      const note = document.querySelector('.note');
+      if (note) note.innerHTML = 'Downloads from this project\'s GitHub releases. To be sure you have the real file, its fingerprint should match:';
+    }
+  }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) document.documentElement.classList.add('js');
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
+                                      { threshold: .15, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => reduce ? el.classList.add('in') : io.observe(el));
+
+  // Liquid glass sheen follows the pointer
+  document.addEventListener('pointermove', e => {
+    for (const g of document.querySelectorAll('.glass')) {
+      const r = g.getBoundingClientRect();
+      if (e.clientY < r.top - 200 || e.clientY > r.bottom + 200) continue;
+      g.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      g.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }
+  }, { passive: true });
+
+  if (reduce) return;
+
+  // Parallax layers and the home-screen zoom
+  const layers = [...document.querySelectorAll('[data-speed]')];
+  const showcase = document.querySelector('.showcase');
+  const screen = document.getElementById('screen');
+  const hills = document.querySelector('.hills');
+  const stageTitle = document.querySelector('.stage h2');
+  const tiles = [...document.querySelectorAll('.tile')];
+  let ticking = false;
+
+  function frame() {
+    const y = scrollY, vh = innerHeight;
+    for (const el of layers) {
+      const r = el.parentElement.getBoundingClientRect();
+      if (r.bottom < -vh || r.top > vh * 2) continue;
+      el.style.transform = `translate3d(0, ${(-(r.top) * parseFloat(el.dataset.speed)).toFixed(1)}px, 0)`;
+    }
+    // 0 → 1 while the showcase scrolls through
+    const s = showcase.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, -s.top / (s.height - vh)));
+    const ease = 1 - Math.pow(1 - Math.min(1, p * 1.6), 3);
+    screen.style.setProperty('--s', (0.72 + 0.28 * ease).toFixed(4));
+    screen.style.setProperty('--ty', ((1 - ease) * 8).toFixed(2) + 'vh');
+    // the heading makes way as the screen fills the view
+    stageTitle.style.opacity = Math.max(0, 1 - ease * 1.7).toFixed(3);
+    stageTitle.style.translate = `0 ${(-ease * 60).toFixed(1)}px`;
+    if (hills) hills.style.transform = `translate3d(${(-p * 4).toFixed(2)}%, ${(p * 6).toFixed(2)}%, 0)`;
+    // focus walks along the dock as you scroll, like a remote
+    const focus = Math.min(tiles.length - 1, Math.floor(p * tiles.length * 1.1));
+    if (tiles.length) tiles.forEach((t, i) => t.classList.toggle('focus', i === focus));
+    ticking = false;
+  }
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+  addEventListener('resize', frame);
+  window.__frame = frame;     // lets a snapshot tool draw a given scroll position
+  frame();
+})();
+</script>
+</body>
+</html>
