@@ -32,7 +32,7 @@
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <img src="images/control-center.png" alt="Control Center">
+      <img src="images/app-control-center.jpg" alt="Control Center: sleep timer, Picture in Picture, screen saver and more, in frosted glass">
       <h3>Control Center, your way</h3>
       Sleep timer, volume boost (up to 300%, with a soft limiter), Picture in Picture and the screen saver. Add the controls you use and remove the ones you don't.
     </td>
@@ -61,7 +61,7 @@ Every show gets its key art, episodes by season with synopses and stills, the ca
 
 **Also:** a screen saver built from your own key art, tvOS-style scenery or Aerial videos · separate profiles for everyone at home · a Settings window for the things you set once.
 
-<sub>Screenshots of Front Row 0.1 on macOS 26. The Control Center picture is an illustration.</sub>
+<sub>Screenshots of Front Row 0.1 on macOS 26. The Ad Block control in the Control Center picture isn't included in the public download.</sub>
 
 ## Private by design
 
