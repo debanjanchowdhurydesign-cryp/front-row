@@ -20,7 +20,7 @@
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="images/app-your-space.jpg" alt="Your Space: a film you're partway through, with your movies and their ribbons below">
+      <img src="images/app-tv-shows.jpg" alt="Your Space: Up Next and your TV shows">
       <h3>Your Space</h3>
       Add a folder of films and shows and Front Row finds posters, key art, cast and episode guides. MKV, AVI and more play right inside. Posters get a little ribbon when a film is a new release, an Oscar winner, a blockbuster or a classic.
     </td>
@@ -50,8 +50,7 @@
   <img src="images/app-show.jpg" alt="A show's page with its key art, the episode you're on and Resume" width="100%">
 </p>
 <p align="center">
-  <img src="images/app-episodes.jpg" alt="Episodes by season with synopses, the cast, and how far through you are" width="49%">
-  <img src="images/app-tv-shows.jpg" alt="The TV Shows tab: Up Next and your shows" width="49%">
+  <img src="images/app-episodes.jpg" alt="Episodes by season with synopses, the cast, and how far through you are" width="100%">
 </p>
 <p align="center">
   <img src="images/app-episodes-panel.jpg" alt="The Episodes panel sliding in over the player" width="100%">
