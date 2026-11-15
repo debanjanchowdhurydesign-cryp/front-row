@@ -214,6 +214,7 @@ h2 .grad{background:linear-gradient(90deg,#ff8a5b,#ff4f7b 40%,#a970ff 75%,#3d8bf
 .steps p{color:var(--dim);font-size:15px}
 .steps p strong{color:var(--ink);font-weight:600}
 @media (max-width:900px){.steps{grid-template-columns:1fr}}
+.note a{text-decoration:underline;text-underline-offset:2px}
 .note{margin-top:20px;font-size:13px;color:var(--dim);max-width:52ch}.note strong{color:var(--ink);font-weight:600}
 .hash{margin-top:8px;font-size:12px;color:var(--faint);word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 
@@ -255,7 +256,7 @@ footer a{text-decoration:underline;text-underline-offset:2px}
     <h1>Front Row.</h1>
     <p class="lede">Your Mac, as a TV. Every service you watch and every film you own, in one calm home screen.</p>
     <div class="cta">
-      <a class="btn primary" href="#download">
+      <a class="btn primary" href="https://github.com/debanjanchowdhurydesign-cryp/front-row/releases/latest/download/Front-Row.dmg">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
         Download for free
       </a>
@@ -402,12 +403,12 @@ footer a{text-decoration:underline;text-underline-offset:2px}
           <span>Version 0.1</span><span>Apple silicon &amp; Intel</span><span>macOS 14+</span><span>Liquid Glass on macOS 26</span><span id="size">43 MB disk image</span>
         </div>
         <div class="cta" style="justify-content:flex-start">
-          <a class="btn primary" id="dl" href="https://drive.google.com/uc?export=download&amp;id=1Q7kHcFBubhb1vEXdlT9k7ct6YWerAlr-" rel="noopener">
+          <a class="btn primary" id="dl" href="https://github.com/debanjanchowdhurydesign-cryp/front-row/releases/latest/download/Front-Row.dmg">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
             Download for Mac
           </a>
         </div>
-        <p class="note">Hosted on Google Drive. It will say it can't scan the file for viruses (it does that for every app); click <strong>Download anyway</strong>. To be sure you have the real file, its fingerprint should match:</p>
+        <p class="note">Downloads from the project's <a href="https://github.com/debanjanchowdhurydesign-cryp/front-row/releases/latest">GitHub releases</a>. To be sure you have the real file, its fingerprint should match:</p>
         <p class="hash" id="hash">SHA-256 272eabbffebcfc6fd80ecff313176d1f5f83e6282393bdabc3818906349d3fc6</p>
       </div>
     </div>
@@ -429,17 +430,6 @@ footer a{text-decoration:underline;text-underline-offset:2px}
 
 <script>
 (() => {
-  // On GitHub Pages (name.github.io/repo), download from that repo's latest release.
-  const gh = location.hostname.match(/^([a-z0-9-]+)\.github\.io$/i);
-  if (gh) {
-    const repo = location.pathname.split('/').filter(Boolean)[0];
-    const dl = document.getElementById('dl');
-    if (repo && dl) {
-      dl.href = `https://github.com/${gh[1]}/${repo}/releases/latest/download/Front-Row.dmg`;
-      const note = document.querySelector('.note');
-      if (note) note.innerHTML = 'Downloads from this project\'s GitHub releases. To be sure you have the real file, its fingerprint should match:';
-    }
-  }
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce) document.documentElement.classList.add('js');
 
