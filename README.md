@@ -37,7 +37,7 @@
       Sleep timer, volume boost (up to 300%, with a soft limiter), Picture in Picture and the screen saver. Add the controls you use and remove the ones you don't.
     </td>
     <td width="50%" valign="top">
-      <img src="images/search.png" alt="Search any film">
+      <img src="images/app-search.jpg" alt="Search: a film's poster, ratings, where it's streaming and similar films">
       <h3>Search any film</h3>
       Look up a film to see its details, ratings, similar films and where it's streaming.
     </td>
